@@ -19,6 +19,8 @@ on:
 
 jobs:
   detect-subdirectory:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     outputs:
       working_directory: ${{ steps.changed-subdir.outputs.working-directory }}
@@ -60,3 +62,5 @@ jobs:
       uses: advanced-security/maven-dependency-submission-action@v3
       with:
         directory: ${{ needs.detect-subdirectory.outputs.working_directory }}
+    - name: Coverage per Test Execution
+      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test

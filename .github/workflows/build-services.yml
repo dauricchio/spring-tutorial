@@ -62,5 +62,20 @@ jobs:
       uses: advanced-security/maven-dependency-submission-action@v3
       with:
         directory: ${{ needs.detect-subdirectory.outputs.working_directory }}
-    - name: Coverage per Test Execution
-      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test
+    - name: Coverage Test Execution
+      run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install
+    - name: Upload target folder
+      uses: actions/upload-artifact@v2
+      with:
+        name: target
+        path: |
+          ${{ github.workspace }}/target
+          ${{ github.workspace }}/reports
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Test Results
+        path: ${{ github.workspace }}/target/surefire-reports/TEST-TestSuite.xml
+        reporter: java-junit
+        java-version: 21

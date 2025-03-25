@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Build services
 
 on:
   push:
@@ -33,7 +33,6 @@ jobs:
           # Ottiene la prima directory modificata nell'ultimo commit
           CHANGED_SUBDIR=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | cut -d/ -f1 | sort -u | head -n 1)
           echo "Changed subfolder: $CHANGED_SUBDIR"
-          
           # Imposta l'output per i job successivi
           echo "working-directory=$CHANGED_SUBDIR" >> $GITHUB_OUTPUT
   build:
@@ -44,7 +43,7 @@ jobs:
         working-directory: ${{ needs.detect-subdirectory.outputs.working_directory }}
     steps:
     - uses: actions/checkout@v4
-    - name: Set working directory
+    - name: Check working directory
       run: pwd  # Mostra la directory corrente per verifica
     - name: Set up JDK
       uses: actions/setup-java@v4
@@ -57,3 +56,5 @@ jobs:
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@v3
+      with:
+        directory: ${{ needs.detect-subdirectory.outputs.working_directory }}

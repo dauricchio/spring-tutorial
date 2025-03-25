@@ -11,6 +11,9 @@ name: Java CI with Maven
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '.github/**'
+      - '**.md'
   pull_request:
     branches: [ "main" ]
 
@@ -18,13 +21,13 @@ jobs:
   detect-subdirectory:
     runs-on: ubuntu-latest
     outputs:
-      working-directory: ${{ steps.changed-subdir.outputs.working-directory }}
+      working_directory: ${{ steps.changed-subdir.outputs.working-directory }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Recupera l'intera cronologia dei commit
-      - name: Get first changed subdirectory
+      - name: Get changed subdirectory
         id: changed-subdir
         run: |
           # Ottiene la prima directory modificata nell'ultimo commit
@@ -38,9 +41,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ needs.detect-subdirectory.outputs.working-directory }}
+        working-directory: ${{ needs.detect-subdirectory.outputs.working_directory }}
     steps:
     - uses: actions/checkout@v4
+    - name: Set working directory
+      run: pwd  # Mostra la directory corrente per verifica
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:

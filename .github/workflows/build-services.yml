@@ -62,34 +62,24 @@ jobs:
       uses: advanced-security/maven-dependency-submission-action@v3
       with:
         directory: ${{ needs.detect-subdirectory.outputs.working_directory }}
-    - name: Coverage Test Execution
+    - name: Test Execution
       run: mvn org.jacoco:jacoco-maven-plugin:prepare-agent install
-    - name: Check working directory
-      shell: bash
-      run: |
-        ls target
-    - name: Check working directory
-      shell: bash
-      run: |
-        ls target/surefire-reports
-    - name: Upload target folder
-      uses: actions/upload-artifact@v4
-      with:
-        name: report.xml
-        path: ${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml
-    - name: Test Report
+    #- name: Upload target folder
+    #  uses: actions/upload-artifact@v4
+    #  with:
+    #    name: report.xml
+    #    path: ${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml
+    - name: Publish Test Report
       uses: dorny/test-reporter@v2
-      if: success() || failure()    # run this step even if previous step failed
+      if: success() || failure()
       with:
         name: JEST Tests            # Name of the check run which will be created
-        path: ${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml    # Path to test results
+        path: ${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml 
         reporter: java-junit
-    - name: Publish test coverage results
+    - name: Publish Test Coverage
       uses: PavanMudigonda/jacoco-reporter@v4.8
       with:
-        coverage_results_path: '${{ needs.detect-subdirectory.outputs.working_directory }}/target/site/jacoco/jacoco.xml'
-        coverage_report_title: 'Test coverage results'
-        coverage_report_name: 'Test coverage results'
+        coverage_results_path: '${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml'
+        coverage_report_title: 'Test Coverage'
+        coverage_report_name: 'Test Coverage results'
         github_token: ${{ secrets.GITHUB_TOKEN }}
-
-#        path: ${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml

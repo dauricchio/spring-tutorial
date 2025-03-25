@@ -15,38 +15,31 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   detect-subdirectory:
     runs-on: ubuntu-latest
     outputs:
-      modified_service: ${{ steps.changed-service.outputs.service }}
+      working-directory: ${{ steps.changed-subdir.outputs.working-directory }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Recupera l'intera cronologia dei commit
-
       - name: Get first changed subdirectory
-        id: changed-service
+        id: changed-subdir
         run: |
           # Ottiene la prima directory modificata nell'ultimo commit
-          FIRST_CHANGED_DIR=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | cut -d/ -f1 | sort -u | head -n 1)
-          
-          # Stampa la directory modificata per debug
-          echo "First changed directory: $FIRST_CHANGED_DIR"
+          CHANGED_SUBDIR=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | cut -d/ -f1 | sort -u | head -n 1)
+          echo "Changed subfolder: $CHANGED_SUBDIR"
           
           # Imposta l'output per i job successivi
-          echo "service=$FIRST_CHANGED_DIR" >> $GITHUB_OUTPUT
-
-
+          echo "working-directory=$CHANGED_SUBDIR" >> $GITHUB_OUTPUT
   build:
     needs: detect-subdirectory
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ${{ needs.detect-subdirectory.outputs.working-directory }}
     steps:
-    - name: Use modified service
-      run: |
-        echo "Il servizio modificato è: ${{ needs.detect-subdirectory.outputs.modified_service }}"
     - uses: actions/checkout@v4
     - name: Set up JDK
       uses: actions/setup-java@v4

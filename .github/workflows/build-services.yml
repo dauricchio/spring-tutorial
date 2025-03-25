@@ -69,10 +69,13 @@ jobs:
       with:
         name: target
         path: |
-          ${{ needs.detect-subdirectory.outputs.working_directory }}/target
-          ${{ needs.detect-subdirectory.outputs.working_directory }}/reports
+          target
+          reports
     - name: Check working directory
-      run: ls ${{ needs.detect-subdirectory.outputs.working_directory }}/target/
+      shell: bash
+      run: |
+        ls 
+        ls target
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: success() || failure()

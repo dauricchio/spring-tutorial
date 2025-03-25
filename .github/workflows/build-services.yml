@@ -84,5 +84,12 @@ jobs:
         name: JEST Tests            # Name of the check run which will be created
         path: ${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml    # Path to test results
         reporter: java-junit
+   - name: Publish test coverage results
+    uses: PavanMudigonda/jacoco-reporter@v4.8
+    with:
+      coverage_results_path: '${{ needs.detect-subdirectory.outputs.working_directory }}/target/site/jacoco/jacoco.xml'
+      coverage_report_title: 'Test coverage results'
+      coverage_report_name: 'Test coverage results'
+      github_token: ${{ secrets.GITHUB_TOKEN }}
 
 #        path: ${{ needs.detect-subdirectory.outputs.working_directory }}/target/surefire-reports/*.xml

@@ -1,0 +1,13 @@
+server.port: 8086
+spring:
+  application:
+    name: order-service
+  data:
+    mongodb:
+      uri: "mongodb+srv://${DB_USR}:${DB_PSW}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority&appName=Cluster0"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"

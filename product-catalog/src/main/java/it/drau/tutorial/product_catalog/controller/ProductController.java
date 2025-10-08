@@ -37,7 +37,7 @@ public class ProductController {
     @DeleteMapping("/product/{id}")
     public String deleteProduct(@PathVariable String id) {
         productRepository.deleteById(id);
-        return "Product Deleted-"+id;
+        return "Product Deleted";
     }
 
     @GetMapping("/product")

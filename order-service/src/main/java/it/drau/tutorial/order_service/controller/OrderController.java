@@ -54,7 +54,7 @@ public class OrderController {
     @DeleteMapping("/order/{id}")
     public String deleteOrder(@PathVariable String id) {
         orderRepository.deleteById(id);
-        return "Order Deleted-"+id;
+        return "Order Deleted";
     }
 
     @GetMapping("/order")

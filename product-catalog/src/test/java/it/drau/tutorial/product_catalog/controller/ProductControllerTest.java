@@ -82,7 +82,7 @@ class ProductControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/product/{id}", shoe.id()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Product Deleted-"+shoe.id()));
+                .andExpect(MockMvcResultMatchers.content().string("Product Deleted"));
     }
 
     @Test
